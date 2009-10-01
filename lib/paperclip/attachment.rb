@@ -436,7 +436,7 @@ module Paperclip
         geometry = Paperclip::Geometry.from_file(to_file(style))
         instance_write(:width, geometry.width.to_i)
         instance_write(:height, geometry.height.to_i)
-        instance.save
+        instance.save unless instance.readonly?
         w, h = geometry.width.to_i, geometry.height.to_i
       end
       if @styles[style].nil? or @styles[style][:geometry].nil?
