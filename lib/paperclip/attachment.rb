@@ -432,7 +432,12 @@ module Paperclip
       return [nil,nil] unless image?
       return @dimensions[style] unless @dimensions[style].nil?
       w, h = instance_read(:width), instance_read(:height)
-      
+      if w.nil? or h.nil?
+        geometry = Paperclip::Geometry.from_file(@queued_for_write[:original])
+        instance_write(:width, geometry.width.to_i)
+        instance_write(:height, geometry.height.to_i)
+        w, h = geometry.width.to_i, geometry.height.to_i
+      end
       if @styles[style].nil? or @styles[style][:geometry].nil?
         @dimensions[style] = [w,h]
       else
