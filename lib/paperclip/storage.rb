@@ -193,7 +193,7 @@ module Paperclip
         begin
           file.write(AWS::S3::S3Object.value(path(style), bucket_name))
           file.rewind
-        rescue
+        rescue AWS::S3::ResponseError => e
           log("Unexpected error #{e.class} for #{self.class} (id=#{self.id})")
           return nil
         end
