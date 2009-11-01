@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.requirements = ["ImageMagick"]
   s.rubyforge_project = %q{paperclip}
-  s.rubygems_version = %q{1.3.4}
+  s.rubygems_version = %q{1.3.5}
   s.summary = %q{File attachments as attributes for ActiveRecord}
 
   if s.respond_to? :specification_version then
@@ -24,13 +24,25 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
-      s.add_development_dependency(%q<mocha>, [">= 0"])
+      s.add_development_dependency(%q<jferris-mocha>, ["= 0.9.5.0.1241126838"])
+      s.add_development_dependency(%q<aws-s3>, [">= 0"])
+      s.add_development_dependency(%q<sqlite3-ruby>, [">= 0"])
+      s.add_development_dependency(%q<activerecord>, [">= 0"])
+      s.add_development_dependency(%q<activesupport>, [">= 0"])
     else
       s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
-      s.add_dependency(%q<mocha>, [">= 0"])
+      s.add_dependency(%q<jferris-mocha>, ["= 0.9.5.0.1241126838"])
+      s.add_dependency(%q<aws-s3>, [">= 0"])
+      s.add_dependency(%q<sqlite3-ruby>, [">= 0"])
+      s.add_dependency(%q<activerecord>, [">= 0"])
+      s.add_dependency(%q<activesupport>, [">= 0"])
     end
   else
     s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
-    s.add_dependency(%q<mocha>, [">= 0"])
+    s.add_dependency(%q<jferris-mocha>, ["= 0.9.5.0.1241126838"])
+    s.add_dependency(%q<aws-s3>, [">= 0"])
+    s.add_dependency(%q<sqlite3-ruby>, [">= 0"])
+    s.add_dependency(%q<activerecord>, [">= 0"])
+    s.add_dependency(%q<activesupport>, [">= 0"])
   end
 end
