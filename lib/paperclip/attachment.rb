@@ -1,5 +1,7 @@
 # encoding: utf-8
 module Paperclip
+  require 'mime/types'
+
   # The Attachment class manages the files for a given attachment. It saves
   # when the model saves, deletes when the model is destroyed, and processes
   # the file upon assignment.
@@ -79,6 +81,12 @@ module Paperclip
 
       @queued_for_write[:original]   = uploaded_file.to_tempfile
       instance_write(:file_name,       uploaded_file.original_filename.strip.gsub(/[^A-Za-z\d\.\-_]+/, '_'))
+      
+      # Fix content type when it's application/octet-stream
+      # Useful for SWFUpload which resets all content types to this
+      if uploaded_file.content_type.to_s.strip == 'application/octet-stream'
+        uploaded_file.content_type = MIME::Types.type_for(uploaded_file.original_filename.strip).to_s
+      end
       instance_write(:content_type,    uploaded_file.content_type.to_s.strip)
       instance_write(:file_size,       uploaded_file.size.to_i)
       instance_write(:updated_at,      Time.now)
