@@ -450,12 +450,9 @@ module Paperclip
         instance_write(:height, h)
         instance.save unless instance.readonly?
       end
-      if @styles[style].nil? or @styles[style][:geometry].nil?
-        return [nil, nil]
-      else
-        @dimensions[style] = Geometry.parse(@styles[style][:geometry]).new_dimensions_for(w, h)      
-        return @dimensions[style]
-      end
+      return [w, h] if style == :original
+      return [nil, nil] if @styles[style].nil? or @styles[style][:geometry].nil?
+      @dimensions[style] = Geometry.parse(@styles[style][:geometry]).new_dimensions_for(w, h)      
     end
 
     def queue_existing_for_delete #:nodoc:
