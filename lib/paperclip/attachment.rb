@@ -444,11 +444,11 @@ module Paperclip
       return @dimensions[style] unless @dimensions[style].nil?
       w, h = instance_read(:width), instance_read(:height)
       if w.nil? or h.nil?
-        geometry = Paperclip::Geometry.from_file(to_file(style))
-        instance_write(:width, geometry.width.to_i)
-        instance_write(:height, geometry.height.to_i)
-        instance.save unless instance.readonly?
+        geometry = Paperclip::Geometry.from_file(to_file(:original))
         w, h = geometry.width.to_i, geometry.height.to_i
+        instance_write(:width, w)
+        instance_write(:height, h)
+        instance.save unless instance.readonly?
       end
       if @styles[style].nil? or @styles[style][:geometry].nil?
         @dimensions[style] = [w,h]
