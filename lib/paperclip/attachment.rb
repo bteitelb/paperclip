@@ -451,9 +451,10 @@ module Paperclip
         instance.save unless instance.readonly?
       end
       if @styles[style].nil? or @styles[style][:geometry].nil?
-        @dimensions[style] = [w,h]
+        return [nil, nil]
       else
         @dimensions[style] = Geometry.parse(@styles[style][:geometry]).new_dimensions_for(w, h)      
+        return @dimensions[style]
       end
     end
 
