@@ -271,6 +271,15 @@ module Paperclip
     # Determines whether or not the attachment is an image based on the content_type
     def image?
       !content_type.nil? and !!content_type.match(%r{\Aimage/})
+      
+      # Fix content type when it's application/octet-stream
+      if content_type.to_s.strip == 'application/octet-stream'
+        mime_type = MIME::Types.type_for(uploaded_file.original_filename.strip).to_s
+      end
+      instance_write(:content_type,    uploaded_file.content_type.to_s.strip)
+      instance_write(:file_size,       uploaded_file.size.to_i)
+      instance_write(:updated_at,      Time.now)
+      
     end
 
     # Writes the attachment-specific attribute on the instance. For example,
@@ -434,6 +443,11 @@ module Paperclip
 
     def interpolate pattern, style = default_style #:nodoc:
       Paperclip::Interpolations.interpolate(pattern, self, style)
+    end
+
+    def mime_type
+      uploaded_file.content_type = MIME::Types.type_for(instance_read(:file_name)).to_s
+      
     end
 
     def dimensions style = default_style
