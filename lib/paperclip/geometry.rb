@@ -15,8 +15,13 @@ module Paperclip
     # File or path.
     def self.from_file file
       file = file.path if file.respond_to? "path"
+      if RUBY_PLATFORM =~ /mswin32/
+        args = %Q[-format ^%wx^%h "#{file}"[0]]
+      else
+        args = %Q[-format "%wx%h" "#{file}"[0]]
+      end
       geometry = begin
-                   Paperclip.run("identify", %Q[-format "%wx%h" "#{file}"[0]])
+                   Paperclip.run("identify", args)
                  rescue PaperclipCommandLineError
                    ""
                  end
