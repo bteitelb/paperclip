@@ -20,9 +20,9 @@ module Paperclip
       def self.extended base
       end
       
-      def exists?(style = default_style)
+      def exists?(style_name = default_style)
         if original_filename
-          File.exist?(path(style))
+          File.exist?(path(style_name))
         else
           false
         end
@@ -30,17 +30,17 @@ module Paperclip
 
       # Returns representation of the data of the file assigned to the given
       # style, in the format most representative of the current storage.
-      def to_file style = default_style
-        @queued_for_write[style] || (File.new(path(style), 'rb') if exists?(style))
+      def to_file style_name = default_style
+        @queued_for_write[style_name] || (File.new(path(style_name), 'rb') if exists?(style_name))
       end
 
       def flush_writes #:nodoc:
-        @queued_for_write.each do |style, file|
+        @queued_for_write.each do |style_name, file|
           file.close
-          FileUtils.mkdir_p(File.dirname(path(style)))
-          log("saving #{path(style)}")
-          FileUtils.mv(file.path, path(style))
-          FileUtils.chmod(0644, path(style))
+          FileUtils.mkdir_p(File.dirname(path(style_name)))
+          log("saving #{path(style_name)}")
+          FileUtils.mv(file.path, path(style_name))
+          FileUtils.chmod(0644, path(style_name))
         end
         @queued_for_write = {}
       end
@@ -158,6 +158,10 @@ module Paperclip
         Paperclip.interpolates(:s3_domain_url) do |attachment, style|
           "#{attachment.s3_protocol}://#{attachment.bucket_name}.s3.amazonaws.com/#{attachment.path(style).gsub(%r{^/}, "")}"
         end
+      end
+      
+      def expiring_url(time = 3600)
+        AWS::S3::S3Object.url_for(path, bucket_name, :expires_in => time )
       end
 
       def bucket_name
