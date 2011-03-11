@@ -253,6 +253,16 @@ module Paperclip
         new_original.rewind
 
         @queued_for_write = { :original => new_original }
+        
+        begin
+          geometry = Paperclip::Geometry.from_file(@queued_for_write[:original])
+          instance_write(:width, geometry.width.to_i)
+          instance_write(:height, geometry.height.to_i)
+          instance.save
+        rescue NotIdentifiedByImageMagickError => e
+          log("Couldn't get dimensions for #{name}: #{e}")
+        end
+
         post_process
 
         old_original.close if old_original.respond_to?(:close)
